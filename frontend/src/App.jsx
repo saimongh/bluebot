@@ -10,7 +10,7 @@ function App() {
   const handleScan = async () => {
     try {
       // NOTE: Change this URL to your Render URL after deployment!
-      const response = await axios.post('http://127.0.0.1:5000/scan-document', { text });
+      const response = await axios.post('https://bluebot-bqxy.onrender.com', { text });
       setFindings(response.data.findings);
       setDismissedIndices([]); 
     } catch (error) {
@@ -69,7 +69,7 @@ function App() {
             <h1 style={{ fontFamily: 'serif', fontSize: '32px', color: '#54a0ff', margin: 0, letterSpacing: '-0.5px' }}>bluebot.</h1>
             <p style={{ margin: '5px 0 0 0', fontSize: '12px', color: '#a5b1c2', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '1px' }}>the honest legal auditor</p>
           </div>
-          <a href="https://github.com/saimongh" target="_blank" rel="noopener noreferrer" style={{ display: 'flex', alignItems: 'center', gap: '8px', textDecoration: 'none', color: '#a5b1c2', fontSize: '13px', fontWeight: '600', padding: '8px 16px', borderRadius: '12px', backgroundColor: 'rgba(165, 177, 194, 0.1)' }}>Source Code</a>
+          <a href="https://github.com/saimongh/bluebot/blob/main/README.md" target="_blank" rel="noopener noreferrer" style={{ display: 'flex', alignItems: 'center', gap: '8px', textDecoration: 'none', color: '#a5b1c2', fontSize: '13px', fontWeight: '600', padding: '8px 16px', borderRadius: '12px', backgroundColor: 'rgba(165, 177, 194, 0.1)' }}>Source Code</a>
         </header>
         
         <div style={{ position: 'relative', flex: 1, backgroundColor: '#ffffff', borderRadius: '24px', boxShadow: '0 10px 30px rgba(84, 160, 255, 0.08)', overflow: 'hidden' }}>

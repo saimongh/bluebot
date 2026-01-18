@@ -57,5 +57,5 @@ In the spirit of honest design, it is important to note what this prototype does
 
 ---
 
-**Author:** [Saimon Gh](https://github.com/saimongh)  
+**Author:** [Saimongh](https://github.com/saimongh)  
 **Projected Law School Entrance:** Fall 2026
