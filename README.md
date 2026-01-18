@@ -52,5 +52,5 @@ To verify the logic engine, paste the following scenarios into the auditor:
 3. `npm run dev`
 
 ---
-**Author:** [Saimon Gh](https://github.com/saimongh)  
+**Author:** [Saimongh](https://github.com/saimongh)  
 **Perspective:** Developed by a Finance graduate and 2026 Law School Applicant to solve the mechanical friction of legal writing.
