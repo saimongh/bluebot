@@ -1,60 +1,64 @@
 # bluebot. | the honest legal auditor
 
-A minimalist, sequence-aware legal citation auditor designed to enforce Bluebook compliance with a focus on Dieter Rams’ design principles.
+A sequence-aware, minimalist legal citation auditor engineered to enforce Bluebook compliance through automated linguistic analysis and intentional design.
 
 ---
 
 ## 1. the vision
+Legal scholarship is often encumbered by the mechanical complexity of the **Bluebook**. Precision is paramount, yet the manual process of auditing citations for Rule 10 compliance is prone to human fatigue. **bluebot** was built to bridge this gap, automating the "tedious but necessary" to allow the writer to focus on the substance of their legal argument.
 
-Legal writing is often gatekept by the mechanical complexity of the Bluebook. **bluebot** was created to bridge the gap between rigorous legal standards and modern software efficiency. By automating the "tedious but necessary," it allows the writer to focus on the substance of the law rather than the placement of a period.
-
-## 2. core logic & architecture
+## 2. core logic & engineering
+Unlike standard text-replacement tools, **bluebot** treats a legal document as a **state-dependent sequence**.
 
 ### the "id." state machine
-
-Unlike standard "find and replace" tools, **bluebot** views a document as a chronological sequence.
-
-- **State Awareness:** The backend tracks the "Previously Cited Case" in memory.
-- **Contextual Suggestion:** If Case A is cited immediately after Case A, the auditor triggers a **Sequence Alert**, suggesting the short-form "Id." instead of a redundant full citation.
+The backend logic distinguishes between isolated errors and sequential ones to mirror the flow of legal writing.
+* **Contextual Memory:** The auditor tracks the "Previously Cited Case" across the scanning window.
+* **Short-Form Logic:** If *Case A* is followed immediately by another citation to *Case A*, the tool triggers a **Sequence Alert**, suggesting the short-form ***Id.*** instead of a redundant full citation.
 
 ### abbreviation engine (rule 10.2.1)
+The auditor leverages a relational SQLite database mapped to **Table T6 (Institutional Abbreviations)** and **Table T10 (Geographic Terms)**.
+* **Regex Extraction:** A custom regular expression isolates party names from reporter data, ensuring that abbreviations are only applied to the correct segments of the citation.
+* **Non-Destructive Editing:** Using a layered DOM approach, the editor overlays visual highlights (the "visual layer") over the interactive textarea (the "functional layer"), maintaining document integrity while providing real-time feedback.
 
-The auditor utilizes a SQLite-backed relational database containing thousands of entries from Bluebook Tables T6 (Institutional Abbreviations) and T10 (Geographical Terms).
 
-- **Regex Extraction:** Citations are identified using a custom regular expression pattern that isolates party names from reporter data.
-- **Index Precision:** The editor uses a layered DOM approach, where a visual "highlight layer" is perfectly synced with an interactive "textarea layer" to ensure non-destructive editing.
 
-## 3. design philosophy: "less, but better"
-
-Inspired by Dieter Rams, the UI was designed to be:
-
-- **Unobtrusive:** A soft powder-blue palette and ample white space minimize cognitive load.
-- **Honest:** The tool clearly distinguishes between mechanical "Fixes" (abbreviations) and stylistic "Alerts" (sequence issues).
-- **Thorough:** Every detail—from the 24px corner radii to the "Copied!" clipboard feedback—is intentional.
+## 3. design: "less, but better"
+Following Dieter Rams' ten principles of good design, **bluebot** prioritizes clarity and unobtrusiveness:
+* **Honest Design:** The UI clearly distinguishes between mechanical "Fixes" (green) and stylistic "Sequence Alerts" (pink).
+* **Focused Utility:** By stripping away unnecessary UI elements, the interface minimizes cognitive load during the high-stress phases of legal proofreading.
+* **Aesthetic Detail:** Features a soft powder-blue palette, 24px corner radii, and subtle shadows to create a workspace that feels calm and professional.
 
 ## 4. analytical limitations (intellectual honesty)
+In the spirit of honest design, this prototype acknowledges the vast complexity of legal citation:
+* **Authoritative Signals:** Current logic audits Case Names (Rule 10) but does not yet interpret Citation Signals (Rule 1.2).
+* **Long-Term Memory:** While immediate repeats are flagged as *Id.*, the tool does not yet track long-term short-form citations (Rule 10.9) over multiple pages.
+* **Jurisdictional Overrides:** This version is "Pure Bluebook" and does not account for state-specific manuals like the *California Style Manual*.
 
-In the spirit of honest design, it is important to note what this prototype does not yet cover:
+## 5. proof of concept (testing)
+To verify the logic engine, paste the following scenarios into the auditor:
 
-- **Signals & Hierarchy:** The current version focuses on Case Names (Rule 10). It does not yet audit citation signals (Rule 1.2) or their order of authorities.
-- **The "Short Form" Memory:** While the tool identifies immediate repeats (Id.), it does not yet maintain a long-term "Document Memory" for short-form citations used paragraphs later (Rule 10.9).
-- **Jurisdictional Overrides:** This version is "Pure Bluebook" and does not account for local state court style manuals (e.g., The California Style Manual).
+| test scenario | input text | expected behavior | logic |
+| :--- | :--- | :--- | :--- |
+| **rule 10.2.1** | `University of California v Department of Justice` | **Action Required:** Suggests `Univ. of Cal. v. Dep't of Justice` | Identifies T6 institutional terms. |
+| **sequence alert** | `Marbury v. Madison... Marbury v. Madison...` | **Sequence Alert:** Suggests `Id.` for the second instance | Tracks consecutive case keys. |
+| **perfect cite** | `Microsoft Corp. v. Smith, 123 U.S. 456 (2024)` | **Passed:** Recognizes existing abbreviations | Validates against DB entries. |
+| **single party** | `In the matter of Smith v. Jones` | **Passed:** No abbreviations suggested | Respects Rule 10.2.1 single-word rule. |
 
-## 5. setup & installation
+
+
+## 6. setup & installation
 
 ### backend (python/flask)
-
 1. `cd backend`
 2. `pip install -r requirements.txt`
-3. `python seed.py` (to initialize the Bluebook database)
+3. `python seed.py` (to build the T6/T10 database)
 4. `python app.py`
 
 ### frontend (react/vite)
-
 1. `cd frontend`
 2. `npm install`
 3. `npm run dev`
 
 ---
-
-**Author:** [Saimongh](https://github.com/saimongh)  
+**Author:** [Saimon Gh](https://github.com/saimongh)  
+**Perspective:** Developed by a Finance graduate and 2026 Law School Applicant to solve the mechanical friction of legal writing.
