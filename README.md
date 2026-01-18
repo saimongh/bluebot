@@ -4,10 +4,10 @@ A sequence-aware, minimalist legal citation auditor engineered to enforce Bluebo
 
 ---
 
-## 1. the vision
+## 1. THE VISION
 Legal scholarship is often encumbered by the mechanical complexity of the **Bluebook**. Precision is paramount, yet the manual process of auditing citations for Rule 10 compliance is prone to human fatigue. **bluebot** was built to bridge this gap, automating the "tedious but necessary" to allow the writer to focus on the substance of their legal argument.
 
-## 2. core logic & engineering
+## 2. Core Logic and Engineering
 Unlike standard text-replacement tools, **bluebot** treats a legal document as a **state-dependent sequence**.
 
 ### the "id." state machine
@@ -15,26 +15,18 @@ The backend logic distinguishes between isolated errors and sequential ones to m
 * **Contextual Memory:** The auditor tracks the "Previously Cited Case" across the scanning window.
 * **Short-Form Logic:** If *Case A* is followed immediately by another citation to *Case A*, the tool triggers a **Sequence Alert**, suggesting the short-form ***Id.*** instead of a redundant full citation.
 
-### abbreviation engine (rule 10.2.1)
+### Abbreviation Engine (rule 10.2.1)
 The auditor leverages a relational SQLite database mapped to **Table T6 (Institutional Abbreviations)** and **Table T10 (Geographic Terms)**.
 * **Regex Extraction:** A custom regular expression isolates party names from reporter data, ensuring that abbreviations are only applied to the correct segments of the citation.
 * **Non-Destructive Editing:** Using a layered DOM approach, the editor overlays visual highlights (the "visual layer") over the interactive textarea (the "functional layer"), maintaining document integrity while providing real-time feedback.
 
-
-
-## 3. design: "less, but better"
-Following Dieter Rams' ten principles of good design, **bluebot** prioritizes clarity and unobtrusiveness:
-* **Honest Design:** The UI clearly distinguishes between mechanical "Fixes" (green) and stylistic "Sequence Alerts" (pink).
-* **Focused Utility:** By stripping away unnecessary UI elements, the interface minimizes cognitive load during the high-stress phases of legal proofreading.
-* **Aesthetic Detail:** Features a soft powder-blue palette, 24px corner radii, and subtle shadows to create a workspace that feels calm and professional.
-
-## 4. analytical limitations (intellectual honesty)
+## 3. analytical limitations (intellectual honesty)
 In the spirit of honest design, this prototype acknowledges the vast complexity of legal citation:
 * **Authoritative Signals:** Current logic audits Case Names (Rule 10) but does not yet interpret Citation Signals (Rule 1.2).
 * **Long-Term Memory:** While immediate repeats are flagged as *Id.*, the tool does not yet track long-term short-form citations (Rule 10.9) over multiple pages.
 * **Jurisdictional Overrides:** This version is "Pure Bluebook" and does not account for state-specific manuals like the *California Style Manual*.
 
-## 5. proof of concept (testing)
+## 4. HOW TO TEST (proof of concept)
 To verify the logic engine, paste the following scenarios into the auditor:
 
 | test scenario | input text | expected behavior | logic |
