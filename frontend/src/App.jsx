@@ -9,19 +9,19 @@ function App() {
   const [isLoading, setIsLoading] = useState(false)
 
   const handleScan = async () => {
-  setIsLoading(true);
-  try {
-    // UPDATED: Point specifically to the /scan-document endpoint on your live URL
-    const response = await axios.post('https://bluebot-bqxy.onrender.com/scan-document', { text });
-    
-    setFindings(response.data.findings);
-    setDismissedIndices([]); 
-  } catch (error) {
-    console.error("error scanning document:", error);
-  } finally {
-    setIsLoading(false);
-  }
-};
+    if (!text) return;
+    setIsLoading(true);
+    try {
+      // Points to the specific scan path on your live server
+      const response = await axios.post('https://bluebot-bqxy.onrender.com/scan-document', { text });
+      setFindings(response.data.findings);
+      setDismissedIndices([]); 
+    } catch (error) {
+      console.error("error scanning document:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const applyFix = (finding) => {
     const newText = text.slice(0, finding.start) + finding.suggested + text.slice(finding.end);
@@ -39,16 +39,12 @@ function App() {
   const dismissFinding = (startIndex) => setDismissedIndices([...dismissedIndices, startIndex]);
   const restoreAll = () => setDismissedIndices([]);
 
-  const clearAllPassed = () => {
-    const passedIndices = findings.filter(f => !f.needs_fix).map(f => f.start);
-    setDismissedIndices(prev => [...new Set([...prev, ...passedIndices])]);
-  };
-
   const renderHighlightedText = () => {
     if (!text) return null;
     let highlighted = [];
     let lastIndex = 0;
     const visibleFindings = findings.filter(f => !dismissedIndices.includes(f.start)).sort((a, b) => a.start - b.start);
+
     visibleFindings.forEach((finding, i) => {
       highlighted.push(text.slice(lastIndex, finding.start));
       highlighted.push(
@@ -63,7 +59,6 @@ function App() {
   };
 
   const activeFindings = findings.filter(f => !dismissedIndices.includes(f.start));
-  const hasPassedResults = activeFindings.some(f => !f.needs_fix);
 
   return (
     <div style={{ display: 'flex', width: '100vw', height: '100vh', fontFamily: '"Inter", sans-serif', backgroundColor: '#f0f7ff', overflow: 'hidden' }}>
@@ -74,31 +69,42 @@ function App() {
             <h1 style={{ fontFamily: 'serif', fontSize: '32px', color: '#54a0ff', margin: 0, letterSpacing: '-0.5px' }}>bluebot.</h1>
             <p style={{ margin: '5px 0 0 0', fontSize: '12px', color: '#a5b1c2', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '1px' }}>the honest legal auditor</p>
           </div>
-          <a href="https://github.com/saimongh/bluebot/blob/main/README.md" target="_blank" rel="noopener noreferrer" style={{ display: 'flex', alignItems: 'center', gap: '8px', textDecoration: 'none', color: '#a5b1c2', fontSize: '13px', fontWeight: '600', padding: '8px 16px', borderRadius: '12px', backgroundColor: 'rgba(165, 177, 194, 0.1)' }}>Source Code</a>
+          <a href="https://github.com/saimongh/bluebot" target="_blank" rel="noopener noreferrer" style={{ display: 'flex', alignItems: 'center', gap: '8px', textDecoration: 'none', color: '#a5b1c2', fontSize: '13px', fontWeight: '600', padding: '8px 16px', borderRadius: '12px', backgroundColor: 'rgba(165, 177, 194, 0.1)' }}>Source Code</a>
         </header>
         
         <div style={{ position: 'relative', flex: 1, backgroundColor: '#ffffff', borderRadius: '24px', boxShadow: '0 10px 30px rgba(84, 160, 255, 0.08)', overflow: 'hidden' }}>
           <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, padding: '30px', fontSize: '17px', lineHeight: '1.8', whiteSpace: 'pre-wrap', wordWrap: 'break-word', color: 'transparent', pointerEvents: 'none', zIndex: 1, fontFamily: 'serif' }}>
             {renderHighlightedText()}
           </div>
-          <textarea style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, width: '100%', height: '100%', padding: '30px', fontSize: '17px', lineHeight: '1.8', border: 'none', outline: 'none', backgroundColor: 'transparent', color: '#2f3542', resize: 'none', zIndex: 2, fontFamily: 'serif' }} placeholder="paste your legal brief here..." value={text} onChange={(e) => setText(e.target.value)} />
+          <textarea 
+            style={{ 
+              position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, width: '100%', height: '100%', 
+              padding: '30px', fontSize: '17px', lineHeight: '1.8', border: 'none', outline: 'none', 
+              backgroundColor: 'transparent', color: '#2f3542', resize: 'none', zIndex: 2, fontFamily: 'serif',
+              boxSizing: 'border-box'
+            }} 
+            placeholder="paste your legal brief here..." 
+            value={text} 
+            onChange={(e) => setText(e.target.value)} 
+          />
         </div>
 
         <div style={{ display: 'flex', gap: '20px', marginTop: '30px' }}>
-          <button onClick={handleScan} disabled={isLoading} style={{ flex: 1, padding: '18px', backgroundColor: '#54a0ff', color: 'white', border: 'none', borderRadius: '16px', cursor: isLoading ? 'default' : 'pointer', fontWeight: '600', fontSize: '15px', opacity: isLoading ? 0.7 : 1 }}>
-            {isLoading ? 'Waking up the auditor...' : 'run audit'}
+          <button 
+            onClick={handleScan} 
+            disabled={isLoading}
+            style={{ flex: 1, padding: '18px', backgroundColor: '#54a0ff', color: 'white', border: 'none', borderRadius: '16px', cursor: isLoading ? 'default' : 'pointer', fontWeight: '600', fontSize: '15px', opacity: isLoading ? 0.7 : 1 }}
+          >
+            {isLoading ? 'waking up the auditor...' : 'run audit'}
           </button>
           <button onClick={copyToClipboard} style={{ flex: 1, padding: '18px', backgroundColor: '#ffffff', color: '#54a0ff', border: 'none', borderRadius: '16px', cursor: 'pointer', fontWeight: '600', fontSize: '15px', boxShadow: '0 4px 15px rgba(84, 160, 255, 0.1)' }}>{copyStatus}</button>
         </div>
       </div>
 
       <div style={{ flex: '1', padding: '60px 40px', backgroundColor: '#f9fcff', overflowY: 'auto', borderLeft: '1px solid rgba(84, 160, 255, 0.1)' }}>
-        <div style={{ marginBottom: '30px' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
-            <h3 style={{ margin: 0, fontSize: '18px', color: '#2f3542' }}>findings</h3>
-            {dismissedIndices.length > 0 && <button onClick={restoreAll} style={{ fontSize: '11px', color: '#54a0ff', background: 'none', border: 'none', cursor: 'pointer', fontWeight: 'bold' }}>restore ({dismissedIndices.length})</button>}
-          </div>
-          {hasPassedResults && <button onClick={clearAllPassed} style={{ fontSize: '10px', color: '#a5b1c2', background: 'none', border: '1px solid #d1d8e0', borderRadius: '20px', padding: '4px 12px', cursor: 'pointer', fontWeight: 'bold' }}>clear passed</button>}
+        <div style={{ marginBottom: '30px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <h3 style={{ margin: 0, fontSize: '18px', color: '#2f3542' }}>findings</h3>
+          {dismissedIndices.length > 0 && <button onClick={restoreAll} style={{ fontSize: '11px', color: '#54a0ff', background: 'none', border: 'none', cursor: 'pointer', fontWeight: 'bold' }}>restore ({dismissedIndices.length})</button>}
         </div>
         
         {activeFindings.length === 0 ? <p style={{ color: '#a5b1c2', fontSize: '14px', fontStyle: 'italic' }}>workspace is clear.</p> : activeFindings.map((finding, index) => (
@@ -124,6 +130,9 @@ function App() {
       </div>
     </div>
   );
+}
+
+export default App;
 }
 
 export default App;
