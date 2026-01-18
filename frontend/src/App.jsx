@@ -81,7 +81,7 @@ function App() {
           </div>
 
           <a 
-            href="https://github.com/saimongh" 
+            href="https://github.com/saimongh/bluebot/blob/main/README.md" 
             target="_blank" 
             rel="noopener noreferrer"
             style={{ 
