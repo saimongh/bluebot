@@ -76,7 +76,7 @@ function App() {
               bluebot.
             </h1>
             <p style={{ margin: '5px 0 0 0', fontSize: '12px', color: '#a5b1c2', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '1px' }}>
-              the honest legal auditor
+              the honest legal auditor by saimong hseng
             </p>
           </div>
 
