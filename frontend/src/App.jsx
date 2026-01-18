@@ -9,18 +9,19 @@ function App() {
   const [isLoading, setIsLoading] = useState(false)
 
   const handleScan = async () => {
-    setIsLoading(true);
-    try {
-      // UPDATED: Points to the specific scan route on your live Render API
-      const response = await axios.post('https://bluebot-bqxy.onrender.com/scan-document', { text });
-      setFindings(response.data.findings);
-      setDismissedIndices([]); 
-    } catch (error) {
-      console.error("error scanning document:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  setIsLoading(true);
+  try {
+    // UPDATED: Point specifically to the /scan-document endpoint on your live URL
+    const response = await axios.post('https://bluebot-bqxy.onrender.com/scan-document', { text });
+    
+    setFindings(response.data.findings);
+    setDismissedIndices([]); 
+  } catch (error) {
+    console.error("error scanning document:", error);
+  } finally {
+    setIsLoading(false);
+  }
+};
 
   const applyFix = (finding) => {
     const newText = text.slice(0, finding.start) + finding.suggested + text.slice(finding.end);
