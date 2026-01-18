@@ -20,7 +20,7 @@ The auditor leverages a relational SQLite database mapped to **Table T6 (Institu
 * **Regex Extraction:** A custom regular expression isolates party names from reporter data, ensuring that abbreviations are only applied to the correct segments of the citation.
 * **Non-Destructive Editing:** Using a layered DOM approach, the editor overlays visual highlights (the "visual layer") over the interactive textarea (the "functional layer"), maintaining document integrity while providing real-time feedback.
 
-## 3. analytical limitations (intellectual honesty)
+## 3. Analytical Limitations (Intellectual Honesty)
 In the spirit of honest design, this prototype acknowledges the vast complexity of legal citation:
 * **Authoritative Signals:** Current logic audits Case Names (Rule 10) but does not yet interpret Citation Signals (Rule 1.2).
 * **Long-Term Memory:** While immediate repeats are flagged as *Id.*, the tool does not yet track long-term short-form citations (Rule 10.9) over multiple pages.
