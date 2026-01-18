@@ -8,11 +8,13 @@ function App() {
   const [copyStatus, setCopyStatus] = useState('copy text')
   const [isLoading, setIsLoading] = useState(false)
 
+  // Test text designed to trigger institutional abbreviations (T6) and the "Id." sequence logic
+  const testText = "the court must first address the standing of the parties. the plaintiff relies heavily on the precedent established in University of California v. Department of Justice, 123 U.S. 456 (2024), which clarified jurisdictional boundaries. furthermore, University of California v. Department of Justice, 123 U.S. 456 (2024) proves that the defense's reliance on Corporation v. Smith, 789 F.Supp. 12 (2020) is misplaced. if the court finds that Microsoft Corporation v. United States, 101 S.Ct. 99 (2018) governs this dispute, it must dismiss the action under Marbury v. Madison, 5 U.S. 137 (1803)."
+
   const handleScan = async () => {
     if (!text) return;
     setIsLoading(true);
     try {
-      // updated to your live render endpoint
       const response = await axios.post('https://bluebot-bqxy.onrender.com/scan-document', { text });
       setFindings(response.data.findings);
       setDismissedIndices([]); 
@@ -68,20 +70,20 @@ function App() {
   return (
     <div style={{ display: 'flex', width: '100vw', height: '100vh', fontFamily: '"Inter", sans-serif', backgroundColor: '#f0f7ff', overflow: 'hidden' }}>
       
-      {/* left side: the editor area */}
-      <div style={{ flex: '0 0 65%', padding: '60px', display: 'flex', flexDirection: 'column', boxSizing: 'border-box' }}>
+      {/* Left side: Editor & About Section */}
+      <div style={{ flex: '0 0 65%', padding: '60px', display: 'flex', flexDirection: 'column', boxSizing: 'border-box', overflowY: 'auto' }}>
         <header style={{ marginBottom: '40px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
           <div>
             <h1 style={{ fontFamily: 'serif', fontSize: '32px', color: '#54a0ff', margin: 0, letterSpacing: '-0.5px' }}>
               bluebot.
             </h1>
             <p style={{ margin: '5px 0 0 0', fontSize: '12px', color: '#a5b1c2', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '1px' }}>
-              the honest legal auditor by saimong hseng
+              the honest legal auditor
             </p>
           </div>
 
           <a 
-            href="https://github.com/saimongh/bluebot/blob/main/README.md" 
+            href="https://github.com/saimongh" 
             target="_blank" 
             rel="noopener noreferrer"
             style={{ 
@@ -97,7 +99,7 @@ function App() {
           </a>
         </header>
         
-        <div style={{ position: 'relative', flex: 1, backgroundColor: '#ffffff', borderRadius: '24px', boxShadow: '0 10px 30px rgba(84, 160, 255, 0.08)', overflow: 'hidden' }}>
+        <div style={{ position: 'relative', height: '400px', flexShrink: 0, backgroundColor: '#ffffff', borderRadius: '24px', boxShadow: '0 10px 30px rgba(84, 160, 255, 0.08)', overflow: 'hidden' }}>
           <div style={{
             position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, padding: '30px',
             fontSize: '17px', lineHeight: '1.8', whiteSpace: 'pre-wrap', wordWrap: 'break-word',
@@ -119,7 +121,7 @@ function App() {
           />
         </div>
 
-        <div style={{ display: 'flex', gap: '20px', marginTop: '30px' }}>
+        <div style={{ display: 'flex', gap: '20px', marginTop: '30px', marginBottom: '40px' }}>
           <button 
             onClick={handleScan} 
             disabled={isLoading}
@@ -135,9 +137,35 @@ function App() {
             {copyStatus}
           </button>
         </div>
+
+        {/* --- ABOUT THIS PROJECT SECTION --- */}
+        <div style={{ backgroundColor: 'rgba(255, 255, 255, 0.5)', padding: '40px', borderRadius: '24px', border: '1px solid rgba(84, 160, 255, 0.1)', marginBottom: '40px' }}>
+          <h2 style={{ fontSize: '20px', color: '#2f3542', marginTop: 0 }}>About This Project</h2>
+          <p style={{ color: '#7f8c8d', lineHeight: '1.6', fontSize: '15px' }}>
+            Legal writing is defined by precision, yet mechanical citation errors often distract from the weight of an argument. I created <strong>bluebot</strong> as a tool to automate <em>Bluebook Rule 10</em>—helping law students and clerks ensure that institutional abbreviations and sequence formatting (Id.) are flawless.
+          </p>
+
+          <h3 style={{ fontSize: '16px', color: '#54a0ff', marginTop: '25px' }}>How to test</h3>
+          <p style={{ color: '#7f8c8d', lineHeight: '1.6', fontSize: '14px' }}>
+            To see the auditor's full logic engine in action, copy the text below and paste it into the editor above:
+          </p>
+          <div style={{ backgroundColor: '#ffffff', padding: '15px', borderRadius: '12px', fontSize: '13px', color: '#a5b1c2', border: '1px solid #e0e6ed', fontStyle: 'italic', position: 'relative' }}>
+            {testText}
+            <button 
+              onClick={() => setText(testText)}
+              style={{ display: 'block', marginTop: '10px', background: 'none', border: '1px solid #54a0ff', color: '#54a0ff', padding: '4px 12px', borderRadius: '8px', cursor: 'pointer', fontSize: '11px', fontWeight: 'bold' }}>
+              insert test text
+            </button>
+          </div>
+
+          <h3 style={{ fontSize: '16px', color: '#54a0ff', marginTop: '25px' }}>Technical Note: "waking up the auditor"</h3>
+          <p style={{ color: '#7f8c8d', lineHeight: '1.6', fontSize: '14px', marginBottom: 0 }}>
+            This application is hosted on a free-tier server. To remain efficient, the backend "sleeps" during periods of inactivity. The 30-60 second delay you may experience on the first scan is the server's "cold start" process. Subsequent audits will be instantaneous.
+          </p>
+        </div>
       </div>
 
-      {/* right side: audit results */}
+      {/* Right side: Audit results */}
       <div style={{ flex: '1', padding: '60px 40px', backgroundColor: '#f9fcff', overflowY: 'auto', borderLeft: '1px solid rgba(84, 160, 255, 0.1)' }}>
         <div style={{ marginBottom: '30px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
@@ -161,7 +189,6 @@ function App() {
           activeFindings.map((finding, index) => (
             <div key={index} style={{ position: 'relative', backgroundColor: '#ffffff', padding: '24px', borderRadius: '20px', marginBottom: '20px', boxShadow: '0 4px 12px rgba(84, 160, 255, 0.05)', transition: 'transform 0.2s' }}>
               
-              {/* dismiss button with restored red hover logic */}
               <button 
                 onClick={() => dismissFinding(finding.start)} 
                 style={{ position: 'absolute', top: '15px', right: '15px', border: 'none', background: 'none', color: '#d1d8e0', cursor: 'pointer', fontSize: '18px', transition: 'color 0.2s' }}
