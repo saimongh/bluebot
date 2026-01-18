@@ -1,7 +1,7 @@
 # bluebot. | the honest legal auditor
 
 A sequence-aware, minimalist legal citation auditor engineered to enforce Bluebook compliance through automated linguistic analysis and intentional design.
-# try the live demo [HERE](https://bluebot-bqxy.onrender.com) 
+# try the live demo [HERE]([https://bluebot-bqxy.onrender.com](https://bluebot-1.onrender.com)) 
 Note: This application is hosted on a free tier. Please allow 30–60 seconds for the server to spin up on your first visit.
 
 ---
