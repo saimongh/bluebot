@@ -6,6 +6,15 @@ import re
 app = Flask(__name__)
 CORS(app)
 
+# FIX: Root route to prevent "404 Not Found" when visiting the URL in a browser
+@app.route('/')
+def home():
+    return jsonify({
+        "status": "online",
+        "service": "bluebot legal auditor API",
+        "documentation": "https://github.com/saimongh/bluebot"
+    })
+
 @app.route('/scan-document', methods=['POST'])
 def scan():
     data = request.json
@@ -16,20 +25,20 @@ def scan():
     
     findings = []
     matches = list(re.finditer(pattern, full_text))
-    last_case_key = None # Tracks the core parties to identify repeats
+    last_case_key = None 
 
     for match in matches:
         raw_cite = match.group(0)
         start, end = match.span()
         
-        # Normalize the case name to check for repetition regardless of original formatting
+        # Normalize the case name to check for repetition
         current_case_key = raw_cite.split(',')[0].strip().lower()
         
         # Get the standard Bluebook abbreviation
-        fixed_cite = validate_and_fix(raw_cite)
+        fixed_cite, _ = validate_and_fix(raw_cite)
         
-        # Sequence logic: Is this citation referring to the same case as the one immediately before it?
-        is_repeat = (current_case_name_key == last_case_key) if last_case_key else False
+        # FIX: Corrected variable name from current_case_name_key to current_case_key
+        is_repeat = (current_case_key == last_case_key) if last_case_key else False
         
         if is_repeat:
             suggested_output = "Id."
@@ -52,4 +61,4 @@ def scan():
     return jsonify({"findings": findings})
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5000)
+    app.run(debug=True)
