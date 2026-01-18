@@ -6,15 +6,19 @@ function App() {
   const [findings, setFindings] = useState([])
   const [dismissedIndices, setDismissedIndices] = useState([])
   const [copyStatus, setCopyStatus] = useState('copy text')
+  const [isLoading, setIsLoading] = useState(false)
 
   const handleScan = async () => {
+    setIsLoading(true);
     try {
-      // NOTE: Change this URL to your Render URL after deployment!
-      const response = await axios.post('https://bluebot-bqxy.onrender.com', { text });
+      // UPDATED: Points to the specific scan route on your live Render API
+      const response = await axios.post('https://bluebot-bqxy.onrender.com/scan-document', { text });
       setFindings(response.data.findings);
       setDismissedIndices([]); 
     } catch (error) {
       console.error("error scanning document:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -80,7 +84,9 @@ function App() {
         </div>
 
         <div style={{ display: 'flex', gap: '20px', marginTop: '30px' }}>
-          <button onClick={handleScan} style={{ flex: 1, padding: '18px', backgroundColor: '#54a0ff', color: 'white', border: 'none', borderRadius: '16px', cursor: 'pointer', fontWeight: '600', fontSize: '15px' }}>run audit</button>
+          <button onClick={handleScan} disabled={isLoading} style={{ flex: 1, padding: '18px', backgroundColor: '#54a0ff', color: 'white', border: 'none', borderRadius: '16px', cursor: isLoading ? 'default' : 'pointer', fontWeight: '600', fontSize: '15px', opacity: isLoading ? 0.7 : 1 }}>
+            {isLoading ? 'Waking up the auditor...' : 'run audit'}
+          </button>
           <button onClick={copyToClipboard} style={{ flex: 1, padding: '18px', backgroundColor: '#ffffff', color: '#54a0ff', border: 'none', borderRadius: '16px', cursor: 'pointer', fontWeight: '600', fontSize: '15px', boxShadow: '0 4px 15px rgba(84, 160, 255, 0.1)' }}>{copyStatus}</button>
         </div>
       </div>
